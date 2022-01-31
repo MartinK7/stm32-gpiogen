@@ -1,8 +1,5 @@
 ##########,##########,##########,##########,##########,##########,##########,##########,##########,##########,##########,##########,##########,##########
 #note,,,,,,,,,,,,,
-#,Available generate styles: ,,,,,,,,,,,,
-#,style,mikul,,,,,,,,,,,
-#,style,pony,,,,,,,,,,,
 #,,,,,,,,,,,,,
 #,,,,,,,,,,,,,
 #,definition,full_names,,fast type,,,,,,,,,
@@ -16,7 +13,6 @@
 #,afr,"1,8,9,0xA,0xF",,,,,,,,,,,
 #,,,,,,,,,,,,,
 #name,port,pin,mode,otyper,ospeedr,pupdr,afr,#,note,#or without column,,,
-style,pony,	,,,,,,,,,,,
 ,,,,,,,,,,,,,
 FMC,B,5,alt,pp,high,no,0xC,,,,,,
 FMC,B,6,alt,pp,high,no,0xC,,,,,,

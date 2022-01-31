@@ -1,12 +1,33 @@
+// Copyright (c) 2022 Martin Krasl
+//
+// Permission is hereby granted, free of charge, to any person
+// obtaining a copy of this software and associated documentation
+// files (the "Software"), to deal in the Software without
+// restriction, including without limitation the rights to use,
+// copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following
+// conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
+
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 #include <stdlib.h>
 #include <ctype.h>
 
 #define assert(_expr_,_str_) if(!(_expr_)){fprintf(stderr,"Error: "_str_"\n");exit(1);}
 #define assertArgs(_expr_,_str_,...) if(!(_expr_)){fprintf(stderr,"Error: "_str_"\n",__VA_ARGS__);exit(1);}
-#define cmp(_str_) (strcasecmp(buf,_str_)==0)
 
 typedef struct {
     char name[17+1];
@@ -19,17 +40,6 @@ typedef struct {
     int afr;
     int ready;
 } config_t;
-
-typedef enum {
-    STYLE_NOTSET,
-    STYLE_PONY
-} style_e;
-
-typedef enum {
-    ORIENTATION_NOTSET,
-    ORIENTATION_VER,
-    ORIENTATION_HOR
-} orientation_e;
 
 typedef enum {
     NEXT,
@@ -49,7 +59,7 @@ int getNum(char *str) {
 }
 
 int strspeccmp(char *str1, char *str2) {
-    int len = strlen(str1) < str2 ? strlen(str1) : strlen(str1);
+    int len = strlen(str1) < strlen(str2) ? strlen(str1) : strlen(str1);
     int ok = 0;
     for(int i=0; i<len; ++i) {
         if(tolower(str1[i]) == tolower(str2[i]))
@@ -116,7 +126,6 @@ int main(int argc, char *argv[]) {
     config_t list[64] = {0};
     char buf[512] = {0};
     state_e st;
-    style_e style = STYLE_NOTSET;
     int inlineCount = 0;
 
     while((st = parse(f_in, buf, 512)) != END) {
@@ -124,31 +133,6 @@ int main(int argc, char *argv[]) {
             // Skip comment
             if(buf[0] == '#') {
                 st = skip(f_in);
-                break;
-            }
-
-            // Compare special commands
-            if cmp("style") {
-                assertArgs(inlineCount==0,"Bad location '%s'", buf);
-                parse(f_in, buf, 512);
-                if cmp("pony") {
-                    // Other styles is not supported for now
-                    style = STYLE_PONY;
-                    st = skip(f_in);
-                } else {
-                    assertArgs(0, "Unknown style '%s'", buf);
-                }
-                break;
-            } else if cmp("orientation") {
-                assertArgs(inlineCount==0,"Bad location '%s'", buf);
-                parse(f_in, buf, 512);
-                if cmp("horizontal") {
-                    // Other orientation is not supported for now
-                    style = ORIENTATION_HOR;
-                    st = skip(f_in);
-                } else {
-                    assertArgs(0, "Unknown orientation '%s'", buf);
-                }
                 break;
             }
 
